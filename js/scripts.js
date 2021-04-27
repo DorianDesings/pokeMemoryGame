@@ -65,7 +65,6 @@ const setCardsSelected = (firstElementSelected, secondElementSelected) => {
 };
 
 gameContainer.addEventListener('click', e => {
-  console.log(e.target.parentElement.dataset.pokewin);
   if (
     e.target.parentElement.classList.contains('card') &&
     e.target.parentElement.dataset.pokewin === 'false'
@@ -74,8 +73,10 @@ gameContainer.addEventListener('click', e => {
     if (firstSelection === undefined) {
       firstSelection = e.target.parentElement;
     } else {
-      secondSelection = e.target.parentElement;
-      setCardsSelected(firstSelection, secondSelection);
+      if (firstSelection !== e.target.parentElement) {
+        secondSelection = e.target.parentElement;
+        setCardsSelected(firstSelection, secondSelection);
+      }
     }
   }
 });
