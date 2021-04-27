@@ -1,0 +1,106 @@
+:root {
+  --yellow: #ffcc03;
+  --blue: #386abb;
+  --dark-blue: #1e3b71;
+  --red: #ee1515;
+  --black: #222224;
+  --white: #f0f0f0;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #333;
+  font-family: sans-serif;
+  color: var(--yellow);
+  text-align: center;
+  display: grid;
+  place-items: center;
+}
+
+.game-container {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 15px;
+  width: 1300px;
+  padding: 15px;
+  background-color: var(--dark-blue);
+}
+
+.card {
+  width: 200px;
+  height: 225px;
+  color: var(--blue);
+  border: 2px solid var(--black);
+  font-size: 3rem;
+  border-radius: 8px;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.3s;
+}
+
+.card--show {
+  transform: rotateY(180deg);
+}
+
+.card__front,
+.card__back {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+}
+
+.card__img {
+  max-width: 100%;
+  padding: 10px;
+  pointer-events: none;
+}
+
+.card__back {
+  background-image: linear-gradient(
+      49deg,
+      rgba(0, 0, 0, 0.1) 50%,
+      transparent 40%
+    ),
+    linear-gradient(
+      var(--red) 48.5%,
+      var(--black) 48.5%,
+      var(--black) 52.5%,
+      var(--white) 52.5%
+    );
+}
+
+.card__back::before {
+  content: '?';
+  color: #000;
+  position: absolute;
+  width: 75px;
+  height: 75px;
+  background-color: var(--white);
+  border: 7px solid var(--black);
+  border-radius: 50%;
+  background-image: linear-gradient(
+    49deg,
+    rgba(0, 0, 0, 0.05) 50%,
+    transparent 40%
+  );
+}
+
+.card__front {
+  background-color: lightblue;
+  transform: rotateY(180deg);
+}
+
+.fails {
+  font-size: 1.2rem;
+}
