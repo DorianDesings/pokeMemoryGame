@@ -47,6 +47,10 @@ body {
   transform: rotateY(180deg);
 }
 
+.card--show.card__back {
+  transform: scale(0);
+}
+
 .card__front,
 .card__back {
   height: 100%;
