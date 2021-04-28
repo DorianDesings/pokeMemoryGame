@@ -1,9 +1,61 @@
 const gameContainer = document.getElementById('game-container');
 const failElement = document.getElementById('fails-text');
+const pointsElement = document.getElementById('points-element');
+const comboElement = document.getElementById('combo-element');
+const scoreboardElement = document.getElementById('scoreboard-element');
 let allCards;
 let firstSelection = undefined;
 let secondSelection = undefined;
 let fails = 0;
+let canPlay = false;
+let combo = 1;
+let points = 0;
+const ranking = [
+  { name: 'Dorian', points: 0 },
+  { name: 'Sogneil', points: 0 },
+  { name: 'Cocodibuja', points: 0 },
+  { name: 'Surphury', points: 0 },
+  { name: 'NamyBell', points: 0 },
+  { name: 'JFelixZuniga', points: 0 },
+  { name: 'Agucast', points: 0 },
+  { name: 'Alejandro', points: 0 },
+  { name: 'Mony14hg', points: 0 },
+  { name: 'Nala', points: 0 }
+];
+
+const drawRanking = rankingData => {
+  const fragment = document.createDocumentFragment();
+  const dataField = document.createElement('p');
+  for (position of rankingData) {
+    const data = dataField.cloneNode();
+    data.textContent = `${position.name} - ${position.points}`;
+    fragment.appendChild(data);
+  }
+  scoreboardElement.appendChild(fragment);
+};
+
+const getDataFromLocalStorage = () => {
+  const ls = localStorage;
+  const rankingData = ls.getItem('rankingData');
+  if (!rankingData) {
+    ls.setItem('rankingData', JSON.stringify(ranking));
+  }
+
+  drawRanking(JSON.parse(rankingData));
+};
+
+const showAllCards = allCardsElements => {
+  allCardsElements.forEach(card => {
+    card.classList.add('card--show');
+  });
+};
+
+const hideAllCards = allCardsElements => {
+  allCardsElements.forEach(card => {
+    card.classList.remove('card--show');
+  });
+  canPlay = true;
+};
 
 const drawCards = allCards => {
   const fragment = document.createDocumentFragment();
@@ -26,6 +78,12 @@ const drawCards = allCards => {
   });
 
   gameContainer.appendChild(fragment);
+
+  const allCardsElements = document.querySelectorAll('.card');
+
+  setTimeout(() => showAllCards(allCardsElements), 1000);
+  setTimeout(() => hideAllCards(allCardsElements), 4000);
+  getDataFromLocalStorage();
 };
 
 const getRandomNumber = (max = 149) => Math.floor(Math.random() * max + 1);
@@ -47,35 +105,50 @@ const hidePokeCards = (a, b) => {
   b.classList.remove('card--show');
 };
 
+const setPoints = (error = false) => {
+  if (!error) {
+    points = points + combo * 10;
+    combo = combo + 1;
+    pointsElement.textContent = `Total points: ${points}`;
+  } else {
+    combo = 1;
+    fails = fails + 1;
+    failElement.textContent = `Fails: ${fails}`;
+  }
+};
+
 const setCardsSelected = (firstElementSelected, secondElementSelected) => {
   if (firstElementSelected.dataset.id === secondElementSelected.dataset.id) {
     firstElementSelected.dataset.pokewin = true;
     secondElementSelected.dataset.pokewin = true;
+    setPoints();
   } else {
     secondElementSelected.addEventListener(
       'transitionend',
       () => hidePokeCards(firstElementSelected, secondElementSelected),
       { once: true }
     );
-    fails = fails + 1;
-    failElement.textContent = `Fails: ${fails}`;
+    setPoints(true);
   }
   firstSelection = undefined;
   secondSelection = undefined;
+  comboElement.textContent = `X ${combo}`;
 };
 
 gameContainer.addEventListener('click', e => {
-  if (
-    e.target.parentElement.classList.contains('card') &&
-    e.target.parentElement.dataset.pokewin === 'false'
-  ) {
-    e.target.parentElement.classList.add('card--show');
-    if (firstSelection === undefined) {
-      firstSelection = e.target.parentElement;
-    } else {
-      if (firstSelection !== e.target.parentElement) {
-        secondSelection = e.target.parentElement;
-        setCardsSelected(firstSelection, secondSelection);
+  if (canPlay) {
+    if (
+      e.target.parentElement.classList.contains('card') &&
+      e.target.parentElement.dataset.pokewin === 'false'
+    ) {
+      e.target.parentElement.classList.add('card--show');
+      if (firstSelection === undefined) {
+        firstSelection = e.target.parentElement;
+      } else {
+        if (firstSelection !== e.target.parentElement) {
+          secondSelection = e.target.parentElement;
+          setCardsSelected(firstSelection, secondSelection);
+        }
       }
     }
   }

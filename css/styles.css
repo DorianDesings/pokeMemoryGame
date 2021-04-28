@@ -18,17 +18,29 @@ body {
   font-family: sans-serif;
   color: var(--yellow);
   text-align: center;
+}
+
+.main {
   display: grid;
-  place-items: center;
+  justify-items: center;
+  grid-template-columns: 80% 20%;
+}
+
+.scoreboard {
+  background-color: var(--dark-blue);
+  justify-self: start;
+  width: 80%;
+  border: 2px dashed var(--yellow);
+  font-size: 2rem;
 }
 
 .game-container {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 15px;
-  width: 1300px;
   padding: 15px;
   background-color: var(--dark-blue);
+  border: 2px dashed var(--yellow);
 }
 
 .card {
@@ -105,6 +117,17 @@ body {
   transform: rotateY(180deg);
 }
 
+.game-info {
+  display: flex;
+  justify-content: space-between;
+}
+
+.combo {
+  margin-top: 0.5rem;
+  font-size: 2rem;
+}
+
+.points,
 .fails {
   font-size: 1.2rem;
 }
