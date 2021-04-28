@@ -3,6 +3,8 @@ const failElement = document.getElementById('fails-text');
 const pointsElement = document.getElementById('points-element');
 const comboElement = document.getElementById('combo-element');
 const scoreboardElement = document.getElementById('scoreboard-element');
+const modalElement = document.getElementById('modal');
+const formElement = document.getElementById('form');
 let allCards;
 let firstSelection = undefined;
 let secondSelection = undefined;
@@ -10,18 +12,7 @@ let fails = 0;
 let canPlay = false;
 let combo = 1;
 let points = 0;
-const ranking = [
-  { name: 'Dorian', points: 0 },
-  { name: 'Sogneil', points: 0 },
-  { name: 'Cocodibuja', points: 0 },
-  { name: 'Surphury', points: 0 },
-  { name: 'NamyBell', points: 0 },
-  { name: 'JFelixZuniga', points: 0 },
-  { name: 'Agucast', points: 0 },
-  { name: 'Alejandro', points: 0 },
-  { name: 'Mony14hg', points: 0 },
-  { name: 'Nala', points: 0 }
-];
+const ranking = [];
 
 const drawRanking = rankingData => {
   const fragment = document.createDocumentFragment();
@@ -98,8 +89,6 @@ const generatePokeCards = () => {
   currentCards.length < 9 ? generatePokeCards() : drawCards(allCards);
 };
 
-generatePokeCards();
-
 const hidePokeCards = (a, b) => {
   a.classList.remove('card--show');
   b.classList.remove('card--show');
@@ -152,4 +141,14 @@ gameContainer.addEventListener('click', e => {
       }
     }
   }
+});
+
+formElement.addEventListener('submit', e => {
+  e.preventDefault();
+  generatePokeCards();
+  modalElement.classList.remove('modal--show');
+});
+
+window.addEventListener('load', () => {
+  modalElement.classList.add('modal--show');
 });

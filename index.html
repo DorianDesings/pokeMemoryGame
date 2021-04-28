@@ -20,6 +20,23 @@
         <p id="fails-text" class="fails">Fails:0</p>
       </div>
     </main>
+    <div id="modal" class="modal">
+      <form id="form" class="form">
+        <div class="form__field">
+          <label for="name" class="form__label">Name</label>
+          <input id="name" class="form__input" />
+        </div>
+        <div class="form__field">
+          <label for="level" class="form__label">Select Level</label>
+          <select name="level" id="level" class="form__select">
+            <option value="easy">Easy</option>
+            <option value="normal">Normal</option>
+            <option value="hard">Hard</option>
+          </select>
+        </div>
+        <input type="submit" value="Start" class="form__submit" />
+      </form>
+    </div>
     <script src="js/scripts.js"></script>
   </body>
 </html>
