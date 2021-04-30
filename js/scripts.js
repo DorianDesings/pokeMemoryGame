@@ -15,8 +15,15 @@ let points = 0;
 const ranking = [];
 const ls = localStorage;
 let rankingData = ls.getItem('rankingData');
+let user = '';
+let totalCards = 9;
+
+const sortRankingData = () =>
+  JSON.parse(rankingData).sort((a, b) => b.points - a.points);
 
 const drawRanking = rankingData => {
+  rankingData = sortRankingData();
+  scoreboardElement.textContent = '';
   const fragment = document.createDocumentFragment();
   const dataField = document.createElement('p');
   for (position of rankingData) {
@@ -31,15 +38,18 @@ const getDataFromLocalStorage = () => {
   if (!rankingData) {
     ls.setItem('rankingData', JSON.stringify(ranking));
   }
-  drawRanking(JSON.parse(rankingData));
 };
 
 const saveUserData = (name, points) => {
   const newDataForLocalStorage = { name, points };
-  console.log(JSON.stringify());
-  ls.setItem('rankingData', JSON.stringify([newDataForLocalStorage]));
   rankingData = ls.getItem('rankingData');
-  drawRanking(JSON.parse(rankingData));
+  const oldLocalStorage = JSON.parse(rankingData);
+  const newData =
+    oldLocalStorage === [] || oldLocalStorage === null
+      ? [newDataForLocalStorage]
+      : [...oldLocalStorage, newDataForLocalStorage];
+  ls.setItem('rankingData', JSON.stringify(newData));
+  drawRanking(newData);
 };
 
 const showAllCards = allCardsElements => {
@@ -84,12 +94,16 @@ const drawCards = allCards => {
   getDataFromLocalStorage();
 };
 
-const getRandomNumber = (max = 149) => Math.floor(Math.random() * max + 1);
+const getRandomNumber = (max = 150) => Math.floor(Math.random() * max + 1);
 
 const generatePokeCards = () => {
   const currentCards = [
     ...new Set(Array.from({ length: 9 }).map(() => getRandomNumber()))
   ];
+
+  // while (currentCards.length < 9) {
+  //   currentCards = [...new Set([...currentCards, getRandomNumber()])];
+  // }
 
   allCards = [...currentCards, ...currentCards].sort(() => Math.random() - 0.5);
 
@@ -99,6 +113,15 @@ const generatePokeCards = () => {
 const hidePokeCards = (a, b) => {
   a.classList.remove('card--show');
   b.classList.remove('card--show');
+};
+
+const checkPokeWin = () => {
+  const countPokeWins = document.querySelectorAll('.card[data-pokewin="true"]');
+  if (countPokeWins.length === totalCards * 2) {
+    saveUserData(user, points);
+    drawRanking(JSON.parse(rankingData));
+    console.log(rankingData);
+  }
 };
 
 const setPoints = (error = false) => {
@@ -118,6 +141,7 @@ const setCardsSelected = (firstElementSelected, secondElementSelected) => {
     firstElementSelected.dataset.pokewin = true;
     secondElementSelected.dataset.pokewin = true;
     setPoints();
+    checkPokeWin();
   } else {
     secondElementSelected.addEventListener(
       'transitionend',
@@ -152,12 +176,14 @@ gameContainer.addEventListener('click', e => {
 
 formElement.addEventListener('submit', e => {
   e.preventDefault();
-  saveUserData(e.target.name.value, 0);
+  user = e.target.name.value;
   formElement.remove();
   generatePokeCards();
   modalElement.classList.remove('modal--show');
+  drawRanking(JSON.parse(rankingData));
 });
 
 window.addEventListener('load', () => {
+  getDataFromLocalStorage();
   modalElement.classList.add('modal--show');
 });
