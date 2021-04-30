@@ -5,6 +5,8 @@ const comboElement = document.getElementById('combo-element');
 const scoreboardElement = document.getElementById('scoreboard-element');
 const modalElement = document.getElementById('modal');
 const formElement = document.getElementById('form');
+const modalWinElement = document.getElementById('modal-win');
+const modalRestartElement = document.getElementById('modal-restart');
 let allCards;
 let firstSelection = undefined;
 let secondSelection = undefined;
@@ -67,6 +69,7 @@ const hideAllCards = allCardsElements => {
 };
 
 const drawCards = allCards => {
+  gameContainer.textContent = '';
   const fragment = document.createDocumentFragment();
   allCards.forEach(cardNumber => {
     const card = document.createElement('div');
@@ -99,7 +102,7 @@ const getRandomNumber = (max = 150) => Math.floor(Math.random() * max + 1);
 
 const generatePokeCards = () => {
   const currentCards = [
-    ...new Set(Array.from({ length: 9 }).map(() => getRandomNumber()))
+    ...new Set(Array.from({ length: totalCards }).map(() => getRandomNumber()))
   ];
 
   // while (currentCards.length < 9) {
@@ -108,7 +111,7 @@ const generatePokeCards = () => {
 
   allCards = [...currentCards, ...currentCards].sort(() => Math.random() - 0.5);
 
-  currentCards.length < 9 ? generatePokeCards() : drawCards(allCards);
+  currentCards.length < totalCards ? generatePokeCards() : drawCards(allCards);
 };
 
 const hidePokeCards = (a, b) => {
@@ -120,6 +123,8 @@ const checkPokeWin = () => {
   const countPokeWins = document.querySelectorAll('.card[data-pokewin="true"]');
   if (countPokeWins.length === totalCards * 2) {
     saveUserData(user, points);
+    modalWinElement.classList.add('modal-win--show');
+    canPlay = false;
   }
 };
 
@@ -180,6 +185,11 @@ formElement.addEventListener('submit', e => {
   generatePokeCards();
   modalElement.classList.remove('modal--show');
   drawRanking(JSON.parse(rankingData));
+});
+
+modalRestartElement.addEventListener('click', () => {
+  generatePokeCards();
+  modalWinElement.classList.remove('modal-win--show');
 });
 
 window.addEventListener('load', () => {

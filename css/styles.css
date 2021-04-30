@@ -133,7 +133,8 @@ body {
   font-size: 1.2rem;
 }
 
-.modal {
+.modal,
+.modal-win {
   position: fixed;
   background-color: rgb(0 0 0 / 0.9);
   width: 100vw;
@@ -144,10 +145,44 @@ body {
   place-items: center;
   transform: scale(0);
   transition: transform 0.5s;
+  opacity: 0;
 }
 
-.modal--show {
+.modal-win {
+  background-color: rgb(0 0 0 / 0.4);
+  font-size: 1.4rem;
+  justify-items: center;
+}
+
+.modal-win__container {
+  background-color: var(--blue);
+  padding: 2rem 1rem;
+  border-radius: 20px;
+  border: 3px solid var(--yellow);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.modal-win__text {
+  margin: 0;
+  margin-bottom: 50px;
+  font-size: 2rem;
+  width: 100%;
+}
+
+.modal-win__link {
+  text-decoration: none;
+  color: var(--yellow);
+  background-color: var(--dark-blue);
+  padding: 1rem 2rem;
+  border-radius: 15px;
+}
+
+.modal--show,
+.modal-win--show {
   transform: scale(1);
+  opacity: 1;
 }
 
 .form {
