@@ -74,6 +74,7 @@ body {
   align-items: center;
   justify-content: center;
   border-radius: 8px;
+  backface-visibility: hidden;
 }
 
 .card__img {
