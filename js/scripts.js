@@ -49,6 +49,7 @@ const saveUserData = (name, points) => {
       ? [newDataForLocalStorage]
       : [...oldLocalStorage, newDataForLocalStorage];
   ls.setItem('rankingData', JSON.stringify(newData));
+  rankingData = ls.getItem('rankingData');
   drawRanking(newData);
 };
 
@@ -119,8 +120,6 @@ const checkPokeWin = () => {
   const countPokeWins = document.querySelectorAll('.card[data-pokewin="true"]');
   if (countPokeWins.length === totalCards * 2) {
     saveUserData(user, points);
-    drawRanking(JSON.parse(rankingData));
-    console.log(rankingData);
   }
 };
 
